@@ -8,6 +8,7 @@ public class Room {
     private HashMap<String, Room> exits;
     private HashMap<String, Item> inventory;
 
+
     private String longDescription;
 
     public Room(String description, String longDescription) {
@@ -15,6 +16,7 @@ public class Room {
         this.longDescription = longDescription;
         exits = new HashMap<String, Room>();
         inventory = new HashMap<>();
+
     }
 
     private String getExitString() {

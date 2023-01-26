@@ -1,3 +1,5 @@
+import org.w3c.dom.traversal.TreeWalker;
+
 public class Game {
 
     private Room currentRoom;
@@ -117,7 +119,11 @@ public class Game {
             case GRAB:
                 grab(command);
                 break;
+            case TALK:
+                talk (command);
+                break;
         }
+
 
         return wantToQuit;
     }
@@ -139,7 +145,21 @@ public class Game {
             player.setItem(key, grabItem);
         }
     }
+    private void talk (Command command){
+        CommandWord commandWord = command.getCommandWord();
 
+        switch(commandWord) {
+            case GUARD:
+                if (player.getItemString().equals("coin1, coin2, coin3"))
+                System.out.println("");
+                else{
+                    System.out.println("Hey!!! You can't pass here! But if you find me 3 coins then maybe I can offer little help...Don't tell anyone");
+                }
+
+
+            }
+
+    }
     private void drop(Command command) {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
