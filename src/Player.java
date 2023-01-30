@@ -1,13 +1,16 @@
 import java.util.HashMap;
 
 import java.util.Set;
-import java.util.Iterator;
 
 public class Player {
     private HashMap<String, Item> inventory;
 
+  Item intergrity;
+  Command command;
+
     Player() {
         inventory = new HashMap<>();
+
     }
 
     public String getItemString() {
@@ -26,5 +29,33 @@ public class Player {
     public Item getItem(String name) {
         return inventory.remove(name);
     }
+
+    public boolean hasKey(String enter){
+
+        if(enter == "castle"){
+            if(inventory.containsKey("guard key")){
+                return true;
+            }
+        if(enter == "cave"){
+
+
+            return true;
+
+        }
+    }
+        return false;
+    }
+
+
+
+    /*public HashMap getInventory(){
+        return inventory;}
+
+    public void setIntergrity(String name,Item intergrity){
+        this.intergrity = intergrity;
+    }
+    public Item getIntergrity(){
+        return intergrity;
+    }*/
 
 }

@@ -19,7 +19,7 @@ public class Game {
     }
 
     private void createRooms() {
-        Room frontCastle = new Room("the main gate is guarded securely, I don't think those guard will let us in...","");
+        Room frontCastle = new Room("the main gate is guarded securely, I don't think those guard will let us in...","This look like the front of the castle, some of the guard standing there, maybe they know something. There is a road leading up north");
         Room backCastle = new Room("they have a little gate here for seller to enter","");
         Room eastCastle = new Room("The wall is too high, I don't think it's climbable","");
         Room westCastle = new Room("those walls look so high,  there is also small hole in the walk","");
@@ -33,6 +33,8 @@ public class Game {
 
         Room dungeon = new Room("uhhhhh, an abandoned dungeon? ","" );
         Room dragonCage = new Room("WAIT WAIT what is that!!!!! A DRAGON??","" );
+
+        Room darkPit = new Room("","");
 
         frontCastle.setExit("north", cave);
         frontCastle.setExit("west", westCastle);
@@ -63,13 +65,16 @@ public class Game {
         cave.setExit("west", northWestForest);
         cave.setExit("east", lake);
 
-        Item obj = new Item();
-        Item obj2 = new Item();
-        Item obj3 = new Item();
+        Item coin1 = new Item();
+        Item coin2 = new Item();
+        Item coin3 = new Item();
 
-        player.setItem("one", obj);
-        frontCastle.setItem("bag", obj2);
-        store.setItem("sword", obj3);
+        dungeon.setItem("coin", coin1);
+
+        westCastle.setItem("coin", coin2);
+
+        cave .setItem("coin", coin3);
+
 
         currentRoom = frontCastle;
     }
@@ -83,7 +88,13 @@ public class Game {
             Command command = parser.getCommand();
             finished = processCommand(command);
         }
+        die();
         System.out.println("Thanks for playing!");
+    }
+
+    private void die(){
+        boolean finished = true;
+
     }
 
     private boolean processCommand(Command command) {
@@ -120,14 +131,32 @@ public class Game {
                 grab(command);
                 break;
             case TALK:
-                talk (command);
+               talk (command);
                 break;
+            case ENTER:
+                    enter(command);
+            case LIGHT:
+                light(command);
         }
 
 
         return wantToQuit;
     }
+    private boolean light(Command command){
+        if (!command.hasSecondWord()) {
 
+            System.out.println("Lighter on");
+            return true;
+        }
+        else
+            return false;
+    }
+private void enter(Command command){
+    if(!command.hasSecondWord()) {
+        System.out.println("Enter where?");
+        return;
+    }
+}
     private void grab(Command command) {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
@@ -138,28 +167,29 @@ public class Game {
         String key = command.getSecondWord();
         Item grabItem = currentRoom.getItem(key);
 
+
         if (grabItem == null) {
             System.out.println("You can't grab " + command.getSecondWord());
         }
         else {
             player.setItem(key, grabItem);
+
         }
     }
     private void talk (Command command){
-        CommandWord commandWord = command.getCommandWord();
+        if (!command.hasSecondWord()){
+            System.out.println("Who do   you want to talk to?");
+            return;
+        }
 
-        switch(commandWord) {
-            case GUARD:
-                if (player.getItemString().equals("coin1, coin2, coin3"))
-                System.out.println("");
+       if (command.getSecondWord().equals("guard"))
+                if (player.getInventory().containsKey("coin1") &&player.getInventory().containsKey("coin2")&&player.getInventory().containsKey("coin3") ){
+              System.out.println("test");}
                 else{
-                    System.out.println("Hey!!! You can't pass here! But if you find me 3 coins then maybe I can offer little help...Don't tell anyone");
+                 System.out.println("Hey!!! You can't pass here! But if you find me 3 coins then maybe I can offer little help...Don't tell anyone");
                 }
+         }
 
-
-            }
-
-    }
     private void drop(Command command) {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
@@ -200,7 +230,7 @@ public class Game {
     {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
-            System.out.println("Go where?");
+            System.out.println("Which direction do you want to go?");
             return;
         }
 
@@ -234,8 +264,13 @@ public class Game {
         System.out.println("You will find yourself in a Mystery World, try figure out what happen!");
         System.out.println("Type \"help\" if you need assistance");
         System.out.println();
-        System.out.println("we will print a long room description here");
-    }
+        System.out.println("Wow, it's a big castle here. This look like the front of the castle, some of the guard standing there, maybe they know something. There is a road leading up north");
+    }}
+/*Room nextRoom = ;
+    if nextroom.equals(RoomVarible){
+        if (player.getInventory().hasKey("thing")){
+            System.out.println()}
+        }
+    System.out.println()
+    }*/
 
-
-}
