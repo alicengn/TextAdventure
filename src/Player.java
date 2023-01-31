@@ -35,20 +35,20 @@ public class Player {
         if(enter == "castle"){
             if(inventory.containsKey("guard key")){
                 return true;
-            }
+            }}
         if(enter == "cave"){
-
-
-            return true;
-
+            Game game = new Game();
+            if (game.checkLight(command) == true)
+                return true;
+            else
+                return false;
         }
-    }
         return false;
     }
 
 
 
-    /*public HashMap getInventory(){
+    public HashMap getInventory(){
         return inventory;}
 
     public void setIntergrity(String name,Item intergrity){
@@ -56,6 +56,6 @@ public class Player {
     }
     public Item getIntergrity(){
         return intergrity;
-    }*/
+    }
 
 }

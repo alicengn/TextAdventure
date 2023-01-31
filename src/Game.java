@@ -3,8 +3,11 @@ import org.w3c.dom.traversal.TreeWalker;
 public class Game {
 
     private Room currentRoom;
+    Room cave;
+    Room insideCastle;
     private Parser parser;
     private Player player;
+    boolean finished;
 
 
     public Game() {
@@ -23,7 +26,7 @@ public class Game {
         Room backCastle = new Room("they have a little gate here for seller to enter","");
         Room eastCastle = new Room("The wall is too high, I don't think it's climbable","");
         Room westCastle = new Room("those walls look so high,  there is also small hole in the walk","");
-
+    Room insideCastle = new Room ("","");
 
         Room store = new Room("adventurer, this AMAZING STORE might have something you need for your adventure, take a look","This store have so many cool thing, but the owner is not around, I wonder where are they... If I grab something, will there be any consequenses? It just a game anyway... ");
         Room cave = new Room("Wow, it's a dark cave, we need some sort of light!","" );
@@ -82,7 +85,8 @@ public class Game {
     public void play() {
         printWelcome();
 
-        boolean finished = false;
+         finished = false;
+
 
         while(!finished) {
             Command command = parser.getCommand();
@@ -93,8 +97,8 @@ public class Game {
     }
 
     private void die(){
-        boolean finished = true;
-
+        System.out.println();
+        finished = true;
     }
 
     private boolean processCommand(Command command) {
@@ -136,28 +140,37 @@ public class Game {
             case ENTER:
                     enter(command);
             case LIGHT:
-                light(command);
+                checkLight(command);
         }
 
 
         return wantToQuit;
     }
-    private boolean light(Command command){
+    public boolean checkLight(Command command){
         if (!command.hasSecondWord()) {
 
             System.out.println("Lighter on");
             return true;
         }
         else
+            System.out.println("You cannot light that "+command.getSecondWord());
             return false;
     }
 private void enter(Command command){
-    if(!command.hasSecondWord()) {
-        System.out.println("Enter where?");
-        return;
-    }
+        if (!command.hasSecondWord()){
+            System.out.println("Where do you want to enter?");
+        }
+        String direction = command.getSecondWord();
+        if (player.hasKey("cave")){
+            currentRoom= cave;}
+            if (player.hasKey("castle")){
+                currentRoom.equals(insideCastle);
+        }
 }
+
+
     private void grab(Command command) {
+
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Grab what?");
@@ -178,16 +191,16 @@ private void enter(Command command){
     }
     private void talk (Command command){
         if (!command.hasSecondWord()){
-            System.out.println("Who do   you want to talk to?");
+            System.out.println("Who do you want to talk to?");
             return;
         }
 
        if (command.getSecondWord().equals("guard"))
                 if (player.getInventory().containsKey("coin1") &&player.getInventory().containsKey("coin2")&&player.getInventory().containsKey("coin3") ){
               System.out.println("test");}
-                else{
+                else
                  System.out.println("Hey!!! You can't pass here! But if you find me 3 coins then maybe I can offer little help...Don't tell anyone");
-                }
+
          }
 
     private void drop(Command command) {
