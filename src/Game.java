@@ -37,8 +37,8 @@ public class Game {
         Room dungeon = new Room("uhhhhh, an abandoned dungeon? ","" );
         Room dragonCage = new Room("WAIT WAIT what is that!!!!! A DRAGON??","" );
 
-        Room darkPit = new Room("You got eaten by a huge evil hello kitty","You got eaten by a huge evil hello kitty");
-        darkPit = die();
+        Room darkPit = new Room("You got eaten by a huge evil knight","You got eaten by a huge evil knight");
+       
         frontCastle.setExit("north", cave);
         frontCastle.setExit("west", westCastle);
         frontCastle.setExit("east", eastCastle);
@@ -98,12 +98,13 @@ frontCastle.setItem("lighter", lighter);
         System.out.println("Thanks for playing!");
     }
 
-    private Room die(){
-
-        System.out.println("Too bad Adventurer, you died...");
+    private boolean die(){
+        if (currentRoom == "darkPit")
+        { System.out.println("Too bad Adventurer, you died...");
         finished = true;
+        return true}
 
-        return null;
+        return false;
     }
 
     private boolean processCommand(Command command) {
