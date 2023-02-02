@@ -4,8 +4,13 @@ public class Game {
     Room innerCave;
     Room cave;
 
+    Room store;
+
     Room insideCastle;
     Room frontCastle;
+    Room backCastle;
+    Room eastCastle;
+    Room westCastle;
     private Parser parser;
     private Player player;
     boolean finished = false;
@@ -25,14 +30,14 @@ public class Game {
 
     private void createRooms() {
         frontCastle = new Room("the main gate is guarded securely, I don't think those guard will let us in...","This look like the front of the castle, some of the guard standing there, maybe they know something. There is a road leading up north");
-        Room backCastle = new Room("they have a little gate here for seller to enter","");
-        Room eastCastle = new Room("The wall is too high, I don't think it's climbable","");
-        Room westCastle = new Room("those walls look so high,  there is also small hole in the walk","");
+        backCastle = new Room("they have a little gate here for seller to enter","");
+        eastCastle = new Room("The wall is too high, I don't think it's climbable","");
+        westCastle = new Room("those walls look so high,  there is also small hole in the walk","");
         insideCastle = new Room ("You are inside the castle now!","long descb");
 
-        Room store = new Room("adventurer, this AMAZING STORE might have something you need for your adventure, take a look","This store have so many cool thing, but the owner is not around, I wonder where are they... If I grab something, will there be any consequenses? It just a game anyway... ");
-        Room cave = new Room("Wow, it's a dark cave, we need some sort of light!","" );
-        Room innerCave = new Room("","" );
+         store = new Room("adventurer, this AMAZING STORE might have something you need for your adventure, take a look","This store have so many cool thing, but the owner is not around, I wonder where are they... If I grab something, will there be any consequenses? It just a game anyway... ");
+         cave = new Room("Wow, it's a dark cave, we need some sort of light!","" );
+         innerCave = new Room("","" );
         Room northWestForest = new Room("This is a forest with big tree all around" ,"");
         Room eastForest = new Room("This road seems to be blocked by a tree" ,"");
         Room lake = new Room("The lake doesn't look too deep","");
