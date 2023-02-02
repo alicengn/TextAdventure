@@ -30,19 +30,19 @@ public class Player {
         return inventory.remove(name);
     }
 
-    public boolean hasKey(String enter){
+    public boolean hasKey(String location){
 
-        if(enter == "castle"){
-            if(inventory.containsKey("guard key")){
+        if(location == "castle"){
+            if(inventory.containsKey("guardKey")){
                 return true;
-            }
-        if(enter == "cave"){
-
-
-            return true;
-
+            }}
+        if(location == "cave"){
+            Game game = new Game();
+            if (game.checkLight() == true)
+                return true;
+            else
+                return false;
         }
-    }
         return false;
     }
 
