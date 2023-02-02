@@ -1,10 +1,15 @@
-import org.w3c.dom.traversal.TreeWalker;
-
 public class Game {
 
     private Room currentRoom;
+    Room innerCave;
+    Room cave;
+
+    Room insideCastle;
+    Room frontCastle;
     private Parser parser;
     private Player player;
+    boolean finished = false;
+    boolean wantToQuit;
 
 
     public Game() {
@@ -19,14 +24,15 @@ public class Game {
     }
 
     private void createRooms() {
-        Room frontCastle = new Room("the main gate is guarded securely, I don't think those guard will let us in...","This look like the front of the castle, some of the guard standing there, maybe they know something. There is a road leading up north");
+        frontCastle = new Room("the main gate is guarded securely, I don't think those guard will let us in...","This look like the front of the castle, some of the guard standing there, maybe they know something. There is a road leading up north");
         Room backCastle = new Room("they have a little gate here for seller to enter","");
         Room eastCastle = new Room("The wall is too high, I don't think it's climbable","");
         Room westCastle = new Room("those walls look so high,  there is also small hole in the walk","");
-
+        insideCastle = new Room ("You are inside the castle now!","long descb");
 
         Room store = new Room("adventurer, this AMAZING STORE might have something you need for your adventure, take a look","This store have so many cool thing, but the owner is not around, I wonder where are they... If I grab something, will there be any consequenses? It just a game anyway... ");
         Room cave = new Room("Wow, it's a dark cave, we need some sort of light!","" );
+        Room innerCave = new Room("","" );
         Room northWestForest = new Room("This is a forest with big tree all around" ,"");
         Room eastForest = new Room("This road seems to be blocked by a tree" ,"");
         Room lake = new Room("The lake doesn't look too deep","");
@@ -34,12 +40,12 @@ public class Game {
         Room dungeon = new Room("uhhhhh, an abandoned dungeon? ","" );
         Room dragonCage = new Room("WAIT WAIT what is that!!!!! A DRAGON??","" );
 
-        Room darkPit = new Room("","");
+        //Room darkPit = new Room("You got eaten by a huge evil knight","You got eaten by a huge evil knight");
 
         frontCastle.setExit("north", cave);
         frontCastle.setExit("west", westCastle);
         frontCastle.setExit("east", eastCastle);
-        frontCastle.setExit("inside", frontCastle);
+        frontCastle.setExit("inside", insideCastle);
 
         eastCastle.setExit("north", frontCastle);
         eastCastle.setExit("south", backCastle);
@@ -60,20 +66,25 @@ public class Game {
         dungeon.setExit("east", eastCastle);
 
         store.setExit("north", backCastle);
+        cave.setExit("enter",innerCave);
 
-        cave.setExit("south", frontCastle);
-        cave.setExit("west", northWestForest);
-        cave.setExit("east", lake);
+        innerCave.setExit("south", frontCastle);
+        innerCave.setExit("west", northWestForest);
+        innerCave.setExit("east", lake);
 
+
+
+        Item coin3 = new Item();
+        Item lighter = new Item();
         Item coin1 = new Item();
         Item coin2 = new Item();
-        Item coin3 = new Item();
 
-        dungeon.setItem("coin", coin1);
+        store.setItem("lighter", lighter);
+        frontCastle.setItem("coin1", coin1);
 
-        westCastle.setItem("coin", coin2);
+        frontCastle.setItem("coin2", coin2);
 
-        cave .setItem("coin", coin3);
+        frontCastle .setItem("coin3", coin3);
 
 
         currentRoom = frontCastle;
@@ -82,23 +93,24 @@ public class Game {
     public void play() {
         printWelcome();
 
-        boolean finished = false;
+        finished = false;
+
 
         while(!finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);
         }
-        die();
+
         System.out.println("Thanks for playing!");
     }
+public void die(){
+        System.out.println("YOU DIE");
+        wantToQuit= true;
+}
 
-    private void die(){
-        boolean finished = true;
-
-    }
 
     private boolean processCommand(Command command) {
-        boolean wantToQuit = false;
+         wantToQuit = false;
 
         CommandWord commandWord = command.getCommandWord();
 
@@ -131,33 +143,32 @@ public class Game {
                 grab(command);
                 break;
             case TALK:
-               talk (command);
+                talk (command);
                 break;
-            case ENTER:
-                    enter(command);
             case LIGHT:
-                light(command);
+                checkLight();
         }
-
 
         return wantToQuit;
     }
-    private boolean light(Command command){
-        if (!command.hasSecondWord()) {
-
+    public boolean checkLight(){
+        if (player.getInventory().containsKey("lighter")) {
             System.out.println("Lighter on");
             return true;
         }
         else
             return false;
     }
-private void enter(Command command){
-    if(!command.hasSecondWord()) {
-        System.out.println("Enter where?");
-        return;
-    }
-}
+
+
+
+
+
+
+
+
     private void grab(Command command) {
+
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Grab what?");
@@ -173,22 +184,26 @@ private void enter(Command command){
         }
         else {
             player.setItem(key, grabItem);
+            System.out.println("You picked up the" +command.getSecondWord());
 
         }
     }
     private void talk (Command command){
         if (!command.hasSecondWord()){
-            System.out.println("Who do   you want to talk to?");
+            System.out.println("Who do you want to talk to?");
             return;
         }
 
-       if (command.getSecondWord().equals("guard"))
-                if (player.getInventory().containsKey("coin1") &&player.getInventory().containsKey("coin2")&&player.getInventory().containsKey("coin3") ){
-              System.out.println("test");}
-                else{
-                 System.out.println("Hey!!! You can't pass here! But if you find me 3 coins then maybe I can offer little help...Don't tell anyone");
-                }
-         }
+        if (command.getSecondWord().equals("guard")){
+            if (player.getInventory().containsKey("coin1") &&player.getInventory().containsKey("coin2")&&player.getInventory().containsKey("coin3") ){
+                System.out.println("Thanks, now hold this key to go inside, don't  tell anyone I give you this!");
+                player.setItem("guardKey", new Item() ); player.getItem("coin1");player.getItem("coin2");player.getItem("coin3;");}
+            if (player.getInventory().containsKey("guardKey") ){
+                System.out.println("Goodluck adventurer!");}
+            else
+                System.out.println("Hey!!! You can't pass here! But if you find me 3 coins then maybe I can offer little help...Don't tell anyone");
+
+        }}
 
     private void drop(Command command) {
         if(!command.hasSecondWord()) {
@@ -242,7 +257,43 @@ private void enter(Command command){
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
+
+            System.out.println(currentRoom);
+        System.out.println(frontCastle);
+
+
+        if (nextRoom.equals(insideCastle)) {
+            System.out.println("inside first if");
+            if (currentRoom.equals(frontCastle) && player.getInventory().containsKey("guardKey")) {
+                System.out.println("bad if");
+                currentRoom = insideCastle;
+                System.out.println(currentRoom.getShortDescription());
+                return;
+            }
+            else if (currentRoom.equals(frontCastle) && !player.getInventory().containsKey("guardKey")){
+                System.out.println ("You got arrested by the guard for illegally attempt to enter the castle");
+                die();
+                return;
+            }
+        }
+
+    /*
+         else if (currentRoom == cave &&checkLight() == true)   {
+                 currentRoom = innerCave;
+             System.out.println(currentRoom.getShortDescription());
+             return;}
+         else if (currentRoom == cave &&checkLight() == false){
+             System.out.println ("You got killed by the dark knight, remember to get a light next time!");
+             die();
+         }
+*/
+
+
+
+
+
         else {
+            System.out.println("assignment is happening here");
             currentRoom = nextRoom;
             System.out.println(currentRoom.getShortDescription());
         }
@@ -271,6 +322,4 @@ private void enter(Command command){
         if (player.getInventory().hasKey("thing")){
             System.out.println()}
         }
-    System.out.println()
-    }*/
-
+    System.out.println()*/

@@ -48,7 +48,7 @@ public class Player {
 
 
 
-    /*public HashMap getInventory(){
+    public HashMap getInventory(){
         return inventory;}
 
     public void setIntergrity(String name,Item intergrity){
@@ -56,6 +56,6 @@ public class Player {
     }
     public Item getIntergrity(){
         return intergrity;
-    }*/
+    }
 
 }
