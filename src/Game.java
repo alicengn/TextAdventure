@@ -25,14 +25,17 @@ public class Game {
 
     Item medal;
     Item sword;
+    Item carrot;
+    Item goldenEgg;
     private Parser parser;
     private Player player;
     boolean finished = false;
     boolean wantToQuit;
-    boolean pass;
+    boolean pass = false;
     boolean light;
+    boolean checkMedal;
     boolean ownerQuest = false;
-    int damage = 0;
+    boolean damage = false;
 
 
 
@@ -97,6 +100,8 @@ top = new Room ("Top Mountain", "So this is the end of our journey, you are a gr
         insideCastle.setExit("north", traderRoom);
         insideCastle.setExit("east", kitchen);
 
+northWestForest.setExit("south", dungeon);
+
 
         kitchen.setExit("west", insideCastle);
         traderRoom.setExit("south",insideCastle);
@@ -104,6 +109,7 @@ top = new Room ("Top Mountain", "So this is the end of our journey, you are a gr
 
         dungeon.setExit("inside", dragonCage);
         dungeon.setExit("east", westCastle);
+        dungeon.setExit("north",northWestForest);
 
         dragonCage.setExit("outside", dungeon);
 
@@ -117,7 +123,8 @@ top = new Room ("Top Mountain", "So this is the end of our journey, you are a gr
         innerCave.setExit("west", northWestForest);
         innerCave.setExit("east", lake);
 
-        lake.setExit("west", mountain);
+        lake.setExit("west", innerCave);
+        lake.setExit("east",mountain);
         mountain.setExit("up", top);
 
 
@@ -126,8 +133,8 @@ top = new Room ("Top Mountain", "So this is the end of our journey, you are a gr
         Item lighter = new Item("it's a lighter, it would be so helpful in dark place");
         Item coin1 = new Item("Wow, a coin!");
         Item coin2 = new Item("Wow, a coin!");
-        Item goldenEgg = new Item ("Ohhh, it's a golden egg, can I make egg scramble with it?");
-        Item carrot = new Item ("carrot! yummy!");
+         goldenEgg = new Item ("Ohhh, it's a golden egg, can I make egg scramble with it?");
+         carrot = new Item ("carrot! yummy!");
         Item cup = new Item ("a glass of water, just in time, I'm so thirsty...");
         Item knife = new Item ("it's a rusted knife");
          medal = new Item ("");
@@ -208,12 +215,16 @@ store.setItem("sword",sword);
                 break;
             case LIGHT:
                 checkLight();
+                break;
             case GIVE:
-                give (command);
+             give (command);
+             break;
             case DRINK:
                 drink(command);
+                break;
             case ATTACK:
                 attack(command);
+                break;
 
         }
 
@@ -233,17 +244,30 @@ store.setItem("sword",sword);
             return;
         }
     }
+    public boolean checkMedal(){
+        if (player.getInventory().containsKey("medal")) {
+            checkMedal = true;
+            return true;
+        }
+        else{
+
+             checkMedal=  false;
+            return false;
+        }
+    }
 
 
     private void attack(Command command){
         if(!command.hasSecondWord()) {
 
             System.out.println("You attack the Dragon with your sword and it seems to work! Let's go adventurer!");
-            damage = damage +1;
+            System.out.println("You killed the Dragon and grab his medal");
+            player.setItem("medal",medal);
             return;}
         else if (command.getSecondWord().equals("dragon")){
             System.out.println("You attack the Dragon with your sword and it seems to work! Let's go adventurer!");
-            damage = damage +1;
+            System.out.println("You killed the Dragon and grab his medal");
+            player.setItem("medal",medal);
             return;
         }
         else{
@@ -264,6 +288,9 @@ private void drink(Command command){
         player.getItem("cup");
         return;
     }
+    else {
+        System.out.println("You cannot drink that "+item);
+    }
 }
 private void give(Command command){
 
@@ -274,15 +301,23 @@ private void give(Command command){
     }
 
     String item = command.getSecondWord();
-    if (currentRoom.equals (northWestForest)&&player.getInventory().containsKey("carrot")&&item.equals("carrot")){
+
+    if (player.getInventory().containsKey(item)){
         pass=true;
         System.out.println("You distract the rabbit by carrot! Grab the egg before they know!");
         player.getItem("carrot");
+        System.out.println("You picked up the golden egg");
+        player.setItem("goldenEgg",goldenEgg);
+
         return;
     }
 
+    else{
+    System.out.println("You cannot give that "+item); return;}
+    }
 
-}
+
+
 
     private void grab(Command command) {
 
@@ -302,28 +337,28 @@ private void give(Command command){
         else if (key.equals("sword")&&currentRoom.equals(store)) {
             System.out.println ("The seller come back and think that you try to steal his sword, he is waiting for your explaination,try to talk to him!"); return;
             }
-        else if (key.equals("medal")&& currentRoom.equals(dragonCage)){
-            if (player.getInventory().containsKey("sword")){
-                System.out.println("You wake the dragon up by trying to get the medal on it neck, it try to attack you but fail because the sword in your hand glow and stunned the dragon"); return;}
-            else if (player.getInventory().containsKey("sword")&&damage == 10){
-                System.out.println(" You killed the dragon, you grab the medal from the dragon"); System.out.println(" put it on top of the mountain to win this game! The mountain locate on the other side of the lake and the medal will give you ability to swim over!");
-                player.setItem("medal",medal);
+        else if (grabItem.equals(medal)&& currentRoom.equals(dragonCage)) {
+            if (player.getInventory().containsKey("sword")) {
+                System.out.println("You wake the dragon up by trying to get the medal on it neck, it try to attack you but fail because the sword in your hand glow and stunned the dragon");
                 return;
-            }else if (!player.getInventory().containsKey("sword")){
+            }
+            else if (!player.getInventory().containsKey("sword")){
                 System.out.println("You got eaten by the dragon while trying to get his medal");
                 die();
                 return;
-            }
+            }}
 
-        }
-        else if (grabItem.equals("goldenEgg")&&currentRoom.equals(northWestForest)){
+
+        else if (key.equals("goldenEgg")&&currentRoom.equals(northWestForest)){
             if (pass == true){
                 System.out.println("You picked up the golden egg");
                 currentRoom.getItem("goldenEgg");
+                player.setItem("goldenEgg",goldenEgg);
                 return;
             }
-            System.out.println("the rabbit stopped you from getting the egg, find some food to distract them");return;
-        }
+            else{
+            System.out.println("the rabbit stopped you from getting the egg, find some food to distract them"); currentRoom.setItem("goldenEgg",goldenEgg);
+        }}
 
 
         else {
@@ -472,28 +507,39 @@ else if (direction.equals("under")){
             else if (currentRoom.equals(cave) &&light == false){
                 System.out.println ("You got killed by the dark knight, remember to get a light next time!");
                 die();
+                return;}
+            else if (currentRoom.equals(lake)){
+                currentRoom = innerCave;
+                System.out.println("Current Room: "+currentRoom.getName());
+
+                System.out.println(currentRoom.getShortDescription());
                 return;
-            }
+            }}
             else if(nextRoom.equals(mountain)){
-                if (player.getInventory().containsKey("medal")){
+                if (checkMedal() == true){
                     System.out.println("With the power of the medal, you swam over the lake and reach the mountain");
                     currentRoom = mountain;
                     System.out.println(currentRoom.getName());
                     System.out.println(currentRoom.getShortDescription());
                     return;
                 }
-                else {
-                    System.out.println("This lake have some magic spell to prevent you from passing it, find a magic medal to pass");
+                else if (checkMedal() == false){
+
                     currentRoom = lake;
+                    System.out.println("This lake have some magic spell to prevent you from passing it, find a magic medal to pass");
+
                     return;
                 }}
-           else if (nextRoom.equals(top)){
+           else if (direction.equals("up")){
+               currentRoom = top;
                System.out.println(currentRoom.getShortDescription());
-               wantToQuit= true;
+               System.out.println ("YOU WIN AND GET BACK TO THE REAL WORLD");
+                wantToQuit = true;
+                return;
             }
 
 
-        }
+
 
     else{
 
