@@ -20,11 +20,20 @@ public class Game {
 
     Room northWestForest;
     Room eastForest;
+    Room mountain;
+    Room top;
+
+    Item medal;
+    Item sword;
     private Parser parser;
     private Player player;
     boolean finished = false;
     boolean wantToQuit;
-    boolean test;
+    boolean pass;
+    boolean light;
+    boolean ownerQuest = false;
+    int damage = 0;
+
 
 
 
@@ -40,31 +49,32 @@ public class Game {
     }
 
     private void createRooms() {
-        frontCastle = new Room("the main gate is guarded securely, I don't think those guard will let us in...","This look like the front of the castle, some of the guard standing there, maybe they know something. There is a road leading up north");
-        backCastle = new Room("they have a little gate here for seller to enter","This is the back of the castle, some seller getting into the castle to delivery something");
-        eastCastle = new Room("The wall is too high, I don't think it's climbable","This is the west of the castle, the wall look too tall, there are some bushes around.");
-        westCastle = new Room("those walls look so high,  there is also small hole in the walk","This is the East of the castle,  the wall look unclimbable, but there is a small hole underneath, I wonder will it fit if a human try to get through.");
-        insideCastle = new Room ("You are inside the castle now!","You are inside the castle with the help of the guard, but I don't think we have much time in here, try to get what you need here and escape quick!");
-        kitchen = new Room("Ohh it's the kitchen, but why there is no food here?","This is the kitchen inside the castle, there is a way out on the west.");
-        traderRoom = new Room("Is the trading room, this place look fun","This is the trading room, there are seller and also guard in here, I can pretend to obe one of the trader and get out of here!");
+        frontCastle = new Room("Front Castle","the main gate is guarded securely, I don't think those guard will let us in...","This look like the front of the castle, some of the guard standing there, talk to them, maybe they know something. There is a road leading up north");
+        backCastle = new Room("Back Castle","they have a little gate here for seller to enter","This is the back of the castle, some seller getting into the castle to delivery something");
+        eastCastle = new Room("East Castle","The wall is too high, I don't think it's climbable","This is the west of the castle, the wall look too tall, there are some bushes around.");
+        westCastle = new Room("West Castle","those walls look so high,  there is also small hole in the walk","This is the East of the castle,  the wall look unclimbable, but there is a small hole underneath, I wonder will it fit if a human try to get through.");
+        insideCastle = new Room ("West Castle","You are inside the castle now!","You are inside the castle with the help of the guard, but I don't think we have much time in here, try to get what you need here and escape quick!");
+        kitchen = new Room("Kitchen","Ohh it's the kitchen, but why there is no food here?","This is the kitchen inside the castle, there is a way out on the west.");
+        traderRoom = new Room("Trader Room","Is the trading room, this place look fun","This is the trading room, there are seller and also guard in here, I can pretend to obe one of the trader and get out of here!");
 
-        store = new Room("advent urer, this AMAZING STORE might have something you need for your adventure, take a look","This store have so many cool thing, but the owner is not around, I wonder where are they... If I grab something, will there be any consequenses?");
-        cave = new Room("Wow, it's a dark cave, we need some sort of light!","Wow, it's a dark cave, we need some sort of light!" );
-        innerCave = new Room("This cave look huge, maybe it lead can lead to somewhere","This is a big cave with  water dripping from the stone above, walk careful and don't be too loud." );
+        store = new Room("Store","adventurer, this AMAZING STORE might have something you need for your adventure, take a look","This store have so many cool thing, but the owner is not around, I wonder where are they... If I grab something, will there be any consequenses?");
+        cave = new Room("Cave","Wow, it's a dark cave, we need some sort of light!","Wow, it's a dark cave, we need some sort of light!" );
+        innerCave = new Room("Inner Cave","This cave look huge, maybe it lead can lead to somewhere","This is a big cave with  water dripping from the stone above, walk careful and don't be too loud." );
 
-        northWestForest = new Room("This is a forest with big tree all around" ,"This is a huge forest, I can see big tree all around and rabbit jumping. There is a golden egg in one of the rabbit hole.");
-        eastForest = new Room("This road seems to be blocked by a tree" ,"This road seems to be blocked by a tree");
-        lake = new Room("The lake doesn't look too deep","This is a lake with crystal clear water,there is something on the north side of it. I just wonder how can we pass here?");
-
-        dungeon = new Room("uhhhhh, an abandoned dungeon? ","this is an old dungeon, seems like no one has stepped inside for a very long time" );
-        dragonCage = new Room("WAIT WAIT what is that!!!!! A DRAGON??","The dragon is sleeping, be careful, don't wake it up! But it seems like there is something under the dragon's neck..." );
-
+        northWestForest = new Room("North West Forest","This is a forest with big tree all around" ,"This is a huge forest, I can see big tree all around and rabbit jumping. There is a golden egg in one of the rabbit hole.");
+        eastForest = new Room("East Forest","This road seems to be blocked by a tree" ,"This road seems to be blocked by a tree");
+        lake = new Room("Lake","The lake doesn't look too deep","This is a lake with crystal clear water,there is something on the north side of it. I just wonder how can we pass here?");
+        mountain = new Room ("Mountain", "You swim over the lake and see the mountain, there is something glowing on the top of the mountain", "There is something glowing on the top of the mountain, this is a very tall mountain, but look climbable");
+        dungeon = new Room("Dungeon","uhhhhh, an abandoned dungeon? ","this is an old dungeon, seems like no one has stepped inside for a very long time" );
+        dragonCage = new Room("Dragon Cage","WAIT WAIT what is that!!!!! A DRAGON??","The dragon is sleeping, be careful, don't wake it up! But it seems like there is something under the dragon's neck..." );
+top = new Room ("Top Mountain", "So this is the end of our journey, you are a great hero for being able to go this far, a legend of this world. And now our journey come to an end, it's time to say good bye. YOU WIN", "");
 
 
         frontCastle.setExit("north", cave);
         frontCastle.setExit("west", westCastle);
         frontCastle.setExit("east", eastCastle);
         frontCastle.setExit("inside", insideCastle);
+        frontCastle.setExit("south",backCastle);
 
         eastCastle.setExit("north", frontCastle);
         eastCastle.setExit("south", backCastle);
@@ -76,21 +86,24 @@ public class Game {
         westCastle.setExit("north", frontCastle);
         westCastle.setExit("south", backCastle);
         westCastle.setExit("west", dungeon);
+        westCastle.setExit("under", westCastle);
 
         backCastle.setExit("east", eastCastle);
         backCastle.setExit("north", frontCastle);
         backCastle.setExit("south", store);
         backCastle.setExit("west", westCastle);
+        backCastle.setExit("inside",traderRoom);
 
         insideCastle.setExit("north", traderRoom);
         insideCastle.setExit("east", kitchen);
 
+
         kitchen.setExit("west", insideCastle);
         traderRoom.setExit("south",insideCastle);
-        traderRoom.setExit("north", backCastle);
+        traderRoom.setExit("outside", backCastle);
 
         dungeon.setExit("inside", dragonCage);
-        dungeon.setExit("east", eastForest);
+        dungeon.setExit("east", westCastle);
 
         dragonCage.setExit("outside", dungeon);
 
@@ -99,26 +112,40 @@ public class Game {
         cave.setExit("south",frontCastle);
 
 
+
         innerCave.setExit("south", frontCastle);
         innerCave.setExit("west", northWestForest);
         innerCave.setExit("east", lake);
 
+        lake.setExit("west", mountain);
+        mountain.setExit("up", top);
 
 
-        Item coin3 = new Item();
-        Item lighter = new Item();
-        Item coin1 = new Item();
-        Item coin2 = new Item();
+
+        Item coin3 = new Item("Wow, a coin!");
+        Item lighter = new Item("it's a lighter, it would be so helpful in dark place");
+        Item coin1 = new Item("Wow, a coin!");
+        Item coin2 = new Item("Wow, a coin!");
+        Item goldenEgg = new Item ("Ohhh, it's a golden egg, can I make egg scramble with it?");
+        Item carrot = new Item ("carrot! yummy!");
+        Item cup = new Item ("a glass of water, just in time, I'm so thirsty...");
+        Item knife = new Item ("it's a rusted knife");
+         medal = new Item ("");
+         sword = new Item ("");
 
         insideCastle.setItem("lighter", lighter);
         backCastle.setItem("coin1", coin1);
 
         dungeon.setItem("coin2", coin2);
+        dragonCage.setItem("medal",medal);
 
         eastCastle .setItem("coin3", coin3);
-        northWestForest.setItem("goldenEgg", new Item());
+        northWestForest.setItem("goldenEgg", goldenEgg);
 
-        kitchen.setItem("carrot",new Item());
+        kitchen.setItem("carrot",carrot);
+        kitchen.setItem("cup", cup);
+        kitchen.setItem ("knife", knife);
+store.setItem("sword",sword);
 
 
         currentRoom = frontCastle;
@@ -181,33 +208,86 @@ public class Game {
                 break;
             case LIGHT:
                 checkLight();
+            case GIVE:
+                give (command);
+            case DRINK:
+                drink(command);
+            case ATTACK:
+                attack(command);
+
         }
 
 
 
         return wantToQuit;
     }
-    public boolean checkLight(){
+    public void checkLight(){
         if (player.getInventory().containsKey("lighter")) {
             System.out.println("Lighter on");
-            return true;
+            light = true;
+            return ;
         }
         else{
             System.out.println("You don't have anything to light");
-            return false;
-        }}
+            light =  false;
+            return;
+        }
+    }
 
 
+    private void attack(Command command){
+        if(!command.hasSecondWord()) {
+
+            System.out.println("You attack the Dragon with your sword and it seems to work! Let's go adventurer!");
+            damage = damage +1;
+            return;}
+        else if (command.getSecondWord().equals("dragon")){
+            System.out.println("You attack the Dragon with your sword and it seems to work! Let's go adventurer!");
+            damage = damage +1;
+            return;
+        }
+        else{
+            System.out.println("You cannot attack that "+command.getSecondWord());
+            return;
+        }
+    }
+private void drink(Command command){
+    if(!command.hasSecondWord()) {
+
+        System.out.println("Drink what?");
+        return;
+    }
+
+    String item = command.getSecondWord();
+    if (item.equals("cup")){
+        System.out.println("You save yourself from dehydration!");
+        player.getItem("cup");
+        return;
+    }
+}
+private void give(Command command){
+
+    if(!command.hasSecondWord()) {
+
+        System.out.println("Give what?");
+        return;
+    }
+
+    String item = command.getSecondWord();
+    if (currentRoom.equals (northWestForest)&&player.getInventory().containsKey("carrot")&&item.equals("carrot")){
+        pass=true;
+        System.out.println("You distract the rabbit by carrot! Grab the egg before they know!");
+        player.getItem("carrot");
+        return;
+    }
 
 
-
-
-
+}
 
     private void grab(Command command) {
 
         if(!command.hasSecondWord()) {
-            // if there is no second word, we don't know where to go...
+
             System.out.println("Grab what?");
             return;
         }
@@ -217,58 +297,75 @@ public class Game {
 
 
         if (grabItem == null) {
-            System.out.println("You can't grab " + command.getSecondWord());}
+            System.out.println("You can't grab " + command.getSecondWord()); return;}
 
         else if (key.equals("sword")&&currentRoom.equals(store)) {
-            System.out.println ("The seller come back and think that you try to steal his sword, he is waiting for your explaination");}
+            System.out.println ("The seller come back and think that you try to steal his sword, he is waiting for your explaination,try to talk to him!"); return;
+            }
         else if (key.equals("medal")&& currentRoom.equals(dragonCage)){
-            if (player.getInventory().containsKey("sword"))
-                System.out.println("You wake the dragon up by trying to get the medal on it neck, it try to attack you but fail because the sword in your hand glow and stunned the dragon");
-            else {
+            if (player.getInventory().containsKey("sword")){
+                System.out.println("You wake the dragon up by trying to get the medal on it neck, it try to attack you but fail because the sword in your hand glow and stunned the dragon"); return;}
+            else if (player.getInventory().containsKey("sword")&&damage == 10){
+                System.out.println(" You killed the dragon, you grab the medal from the dragon"); System.out.println(" put it on top of the mountain to win this game! The mountain locate on the other side of the lake and the medal will give you ability to swim over!");
+                player.setItem("medal",medal);
+                return;
+            }else if (!player.getInventory().containsKey("sword")){
                 System.out.println("You got eaten by the dragon while trying to get his medal");
                 die();
                 return;
             }
 
         }
-        else if (key.equals("goldenEgg")&&currentRoom.equals(northWestForest)){
-            System.out.println("the rabbit stopped you from getting the egg, find some food to distract them");
+        else if (grabItem.equals("goldenEgg")&&currentRoom.equals(northWestForest)){
+            if (pass == true){
+                System.out.println("You picked up the golden egg");
+                currentRoom.getItem("goldenEgg");
+                return;
+            }
+            System.out.println("the rabbit stopped you from getting the egg, find some food to distract them");return;
         }
 
 
         else {
             player.setItem(key, grabItem);
             System.out.println("You picked up " + command.getSecondWord());
-
+            System.out.println(grabItem.getItemDescription());
+return;
         }
     }
     private void talk (Command command){
         //ask mr Adams about second word
         if (!command.hasSecondWord()){
             System.out.println("Who do you want to talk to?");
-
+return;
         }
         String character = command.getSecondWord();
 
         if (character.equals("guard")&&currentRoom.equals(frontCastle)){
             if (player.getInventory().containsKey("coin1") &&player.getInventory().containsKey("coin2")&&player.getInventory().containsKey("coin3") ){
-                System.out.println("Thanks, now hold this key to go inside, don't  tell anyone I give you this!");
-                player.setItem("guardKey", new Item() ); player.getItem("coin1");player.getItem("coin2");player.getItem("coin3");
+                System.out.println("Guard: Thanks, now hold this key to go inside, don't  tell anyone I give you this!");
+                player.setItem("guardKey", new Item("")); player.getItem("coin1");player.getItem("coin2");player.getItem("coin3");
                 return;}
             if (currentRoom.equals(frontCastle)&&player.getInventory().containsKey("guardKey") ){
-                System.out.println("Good luck adventurer!");
+                System.out.println("Guard: Good luck adventurer!");
+
                 return;}
             else if (currentRoom.equals(frontCastle))
-                System.out.println("Hey!!! You can't pass here! But if you find me 3 coins then maybe I can offer little help...Don't tell anyone");
+                System.out.println("Guard: Hey!!! You can't pass here! But if you find me 3 coins then maybe I can offer little help...Don't tell anyone");
             return;}
         if (character.equals("seller")){
             if(player.getInventory().containsKey("goldenEgg")&&currentRoom.equals(store)){
-                System.out.println("I will get this egg, now you can get that sword, some other thing too if you want!");
+                System.out.println("Seller: I will get this egg, now you can get that sword, some other thing too if you want!");
+                System.out.println("The seller gave you the sword");
+                player.setItem("sword", new Item(""));
                 return;}
             else if(player.getInventory().containsKey("sword")&&currentRoom.equals(store)){
-                System.out.println("I will close the store soon, hurry up!"); return;
+                System.out.println("Seller: I will close the store soon"); return;
             }
-            else {System.out.println("Talk to me when you have the golden egg"); return;}
+            else if (ownerQuest == true){
+                System.out.println("Seller: Talk to me when you have the egg, hurry up!"); return;
+            }
+            else {System.out.println("Seller: Are you trying to steal the sword young man? I can give it to you, only if you find me a golden egg, it think it locate somewhere at the North West Forest."); ownerQuest = true; return;}
         }
         else
             System.out.println("You can't talk to "+character); return;
@@ -316,7 +413,7 @@ public class Game {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Which direction do you want to go?");
-
+return;
         }
 
         String direction = command.getSecondWord();
@@ -335,8 +432,10 @@ public class Game {
         if (nextRoom.equals(insideCastle)) {
             //System.out.println("inside first if");
             if (currentRoom.equals(frontCastle) && player.getInventory().containsKey("guardKey")) {
-                System.out.println("You have successfully enter the castle with the guard key, now try to find something useful here and escape before anyone notice...");
                 currentRoom = insideCastle;
+                System.out.println("Current Room: "+currentRoom.getName());
+                System.out.println("You have successfully enter the castle with the guard key, now try to find something useful here and escape before anyone notice...");
+
                 System.out.println(currentRoom.getShortDescription());
                 return;
             }
@@ -346,19 +445,63 @@ public class Game {
                 die();
                 return;
             }
+            else {
+                currentRoom = nextRoom;
+                System.out.println(currentRoom.getName());
+                System.out.println(currentRoom.getShortDescription());
+                return;
+            }
         }
-
+else if (nextRoom.equals(traderRoom)&& currentRoom.equals(backCastle)){
+    System.out.println("You got arrest by trying to enter the castle illegally");
+    die();
+    return;
+        }
+else if (direction.equals("under")){
+            System.out.println("You got arrest by trying to enter the castle illegally");
+            die();
+            return;
+        }
         else if(nextRoom.equals(innerCave)){
-            if (currentRoom.equals(cave) &&checkLight() == true)   {
+            if (currentRoom.equals(cave) &&light == true)   {
                 currentRoom = innerCave;
+                System.out.println("Current Room: "+currentRoom.getName());
+
                 System.out.println(currentRoom.getShortDescription());
                 return;}
-            else if (currentRoom == cave &&checkLight() == false){
+            else if (currentRoom.equals(cave) &&light == false){
                 System.out.println ("You got killed by the dark knight, remember to get a light next time!");
                 die();
                 return;
             }
-        }}
+            else if(nextRoom.equals(mountain)){
+                if (player.getInventory().containsKey("medal")){
+                    System.out.println("With the power of the medal, you swam over the lake and reach the mountain");
+                    currentRoom = mountain;
+                    System.out.println(currentRoom.getName());
+                    System.out.println(currentRoom.getShortDescription());
+                    return;
+                }
+                else {
+                    System.out.println("This lake have some magic spell to prevent you from passing it, find a magic medal to pass");
+                    currentRoom = lake;
+                    return;
+                }}
+           else if (nextRoom.equals(top)){
+               System.out.println(currentRoom.getShortDescription());
+               wantToQuit= true;
+            }
+
+
+        }
+
+    else{
+
+    currentRoom = nextRoom;
+    System.out.println("Current Room: "+currentRoom.getName());
+    System.out.println (nextRoom.getShortDescription());
+    return;
+    }}
 
     private boolean quit(Command command) {
         if(command.hasSecondWord()) {
@@ -369,6 +512,7 @@ public class Game {
             return true;
         }
     }
+
 
     private void printWelcome() {
         System.out.println();

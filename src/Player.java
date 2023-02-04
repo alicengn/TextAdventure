@@ -9,6 +9,7 @@ public class Player {
 
 
 
+
     Player() {
         inventory = new HashMap<>();
 
@@ -37,11 +38,7 @@ public class Player {
 
 
 
-
     public HashMap getInventory(){
         return inventory;}
-
-
-
 
    }

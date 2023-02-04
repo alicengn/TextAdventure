@@ -10,8 +10,10 @@ public class Room {
 
 
     private String longDescription;
+    private String name;
 
-    public Room(String description, String longDescription) {
+    public Room(String name, String description, String longDescription) {
+        this.name = name;
         this.description = description;
         this.longDescription = longDescription;
         exits = new HashMap<String, Room>();
@@ -27,7 +29,7 @@ public class Room {
         }
         return returnString;
     }
-
+    public String getName(){ return name;}
     public String getLongDescription() {
         return longDescription + "\n" + getExitString() + "\n" + getItemString();
     }
