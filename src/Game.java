@@ -52,8 +52,8 @@ public class Game {
         innerCave = new Room("This cave look huge, maybe it lead can lead to somewhere","This is a big cave with  water dripping from the stone above, walk careful and don't be too loud." );
 
         northWestForest = new Room("This is a forest with big tree all around" ,"This is a huge forest, I can see big tree all around and rabbit jumping. There is a golden egg in one of the rabbit hole.");
-         eastForest = new Room("This road seems to be blocked by a tree" ,"This road seems to be blocked by a tree");
-         lake = new Room("The lake doesn't look too deep","This is a lake with crystal clear water,there is something on the north side of it. I just wonder how can we pass here?");
+        eastForest = new Room("This road seems to be blocked by a tree" ,"This road seems to be blocked by a tree");
+        lake = new Room("The lake doesn't look too deep","This is a lake with crystal clear water,there is something on the north side of it. I just wonder how can we pass here?");
 
         dungeon = new Room("uhhhhh, an abandoned dungeon? ","this is an old dungeon, seems like no one has stepped inside for a very long time" );
         dragonCage = new Room("WAIT WAIT what is that!!!!! A DRAGON??","The dragon is sleeping, be careful, don't wake it up! But it seems like there is something under the dragon's neck..." );
@@ -184,7 +184,7 @@ public class Game {
 
 
 
-    return wantToQuit;
+        return wantToQuit;
     }
     public boolean checkLight(){
         if (player.getInventory().containsKey("lighter")) {
@@ -194,7 +194,7 @@ public class Game {
         else{
             System.out.println("You don't have anything to light");
             return false;
-    }}
+        }}
 
 
 
@@ -220,18 +220,18 @@ public class Game {
 
         else if (key.equals("sword")&&currentRoom.equals(store)) {
             System.out.println ("The seller come back and think that you try to steal his sword, he is waiting for your explaination");}
-       else if (key.equals("medal")&& currentRoom.equals(dragonCage)){
-           if (player.getInventory().containsKey("sword"))
-            System.out.println("You wake the dragon up by trying to get the medal on it neck, it try to attack you but fail because the sword in your hand glow and stunned the dragon");
-             else {
-                 System.out.println("You got eaten by the dragon while trying to get his medal");
-                 die();
-                 return;
-           }
+        else if (key.equals("medal")&& currentRoom.equals(dragonCage)){
+            if (player.getInventory().containsKey("sword"))
+                System.out.println("You wake the dragon up by trying to get the medal on it neck, it try to attack you but fail because the sword in your hand glow and stunned the dragon");
+            else {
+                System.out.println("You got eaten by the dragon while trying to get his medal");
+                die();
+                return;
+            }
 
         }
-       else if (key.equals("goldenEgg")&&currentRoom.equals(northWestForest)){
-           System.out.println("the rabbit stopped you from getting the egg, find some food to distract them");
+        else if (key.equals("goldenEgg")&&currentRoom.equals(northWestForest)){
+            System.out.println("the rabbit stopped you from getting the egg, find some food to distract them");
         }
 
 
@@ -253,17 +253,17 @@ public class Game {
             if (player.getInventory().containsKey("coin1") &&player.getInventory().containsKey("coin2")&&player.getInventory().containsKey("coin3") ){
                 System.out.println("Thanks, now hold this key to go inside, don't  tell anyone I give you this!");
                 player.setItem("guardKey", new Item() ); player.getItem("coin1");player.getItem("coin2");player.getItem("coin3");
-                  return;}
+                return;}
             if (currentRoom.equals(frontCastle)&&player.getInventory().containsKey("guardKey") ){
                 System.out.println("Good luck adventurer!");
-            return;}
+                return;}
             else if (currentRoom.equals(frontCastle))
                 System.out.println("Hey!!! You can't pass here! But if you find me 3 coins then maybe I can offer little help...Don't tell anyone");
-        return;}
+            return;}
         if (character.equals("seller")){
             if(player.getInventory().containsKey("goldenEgg")&&currentRoom.equals(store)){
                 System.out.println("I will get this egg, now you can get that sword, some other thing too if you want!");
-            return;}
+                return;}
             else if(player.getInventory().containsKey("sword")&&currentRoom.equals(store)){
                 System.out.println("I will close the store soon, hurry up!"); return;
             }
@@ -271,7 +271,7 @@ public class Game {
         }
         else
             System.out.println("You can't talk to "+character); return;
-        }
+    }
 
 
     private void drop(Command command) {
@@ -348,33 +348,16 @@ public class Game {
         }
 
         else if(nextRoom.equals(innerCave)){
-          if (currentRoom.equals(cave) &&checkLight() == true)   {
-                 currentRoom = innerCave;
-             System.out.println(currentRoom.getShortDescription());
-             return;}
+            if (currentRoom.equals(cave) &&checkLight() == true)   {
+                currentRoom = innerCave;
+                System.out.println(currentRoom.getShortDescription());
+                return;}
             else if (currentRoom == cave &&checkLight() == false){
-             System.out.println ("You got killed by the dark knight, remember to get a light next time!");
-             die();
-             return;
-         }
-        }
-
-
-
-
-
-
-
-
-
-
-        else {
-            //System.out.println("assignment is happening here");
-            currentRoom = nextRoom;
-            System.out.println("Current Room: "+currentRoom); //how to print name?
-            System.out.println(currentRoom.getShortDescription());
-        }
-    }
+                System.out.println ("You got killed by the dark knight, remember to get a light next time!");
+                die();
+                return;
+            }
+        }}
 
     private boolean quit(Command command) {
         if(command.hasSecondWord()) {
