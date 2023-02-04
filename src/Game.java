@@ -24,6 +24,7 @@ public class Game {
     private Player player;
     boolean finished = false;
     boolean wantToQuit;
+    boolean test;
 
 
 
